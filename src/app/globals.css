@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --brand: #fe6d00;
+  --brand-dark: #d75d00;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-menu-in {
+  animation: menu-in 150ms ease-out;
+}
+
+@keyframes drag-hint {
+  0%,
+  20%,
+  100% {
+    transform: translateX(0);
+  }
+  8% {
+    transform: translateX(-4px);
+  }
+  16% {
+    transform: translateX(4px);
+  }
+}
+
+.animate-drag-hint {
+  animation: drag-hint 1.8s ease-in-out 2;
+}
+
+@keyframes mobile-menu-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-mobile-menu-in {
+  animation: mobile-menu-in 200ms ease-out;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 420ms ease-out forwards;
+}

@@ -3,8 +3,9 @@ import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
 import { HowWeWork } from "@/components/sections/HowWeWork";
-import { Services } from "@/components/sections/Services";
 import { Gallery } from "@/components/sections/Gallery";
+import { Services } from "@/components/sections/Services";
+import { ExplodedView } from "@/components/sections/ExplodedView";
 import { BeforeAfter } from "@/components/sections/BeforeAfter";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { FAQ } from "@/components/sections/FAQ";
@@ -20,8 +21,9 @@ export default function Home() {
         <Hero />
         <WhyChooseUs />
         <HowWeWork />
-        <Services />
         <Gallery />
+        <Services />
+        <ExplodedView />
         <BeforeAfter />
         <Testimonials />
         <FAQ />

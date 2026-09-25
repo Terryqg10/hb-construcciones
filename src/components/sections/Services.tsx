@@ -3,7 +3,7 @@ import { Reveal } from "@/components/ui/Reveal";
 
 export function Services() {
   return (
-    <section id="servicios" className="bg-white px-6 py-20">
+    <section id="servicios" className="bg-gray-50 px-6 py-20">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <h2 className="text-center text-3xl font-bold tracking-tight text-slate-900">
@@ -16,7 +16,7 @@ export function Services() {
             const Icon = service.icon;
             return (
               <Reveal key={service.title} delay={index * 0.08}>
-                <div className="group relative flex h-full flex-col items-center overflow-hidden rounded-2xl bg-gray-50 p-8 text-center transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-lg">
+                <div className="group relative flex h-full flex-col items-center overflow-hidden rounded-2xl bg-white p-8 text-center transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-lg">
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand/10 transition-colors duration-300 group-hover:bg-brand">
                     <Icon
                       className="h-7 w-7 text-brand transition-colors duration-300 group-hover:text-white"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { explodedLayers } from "@/lib/exploded-view-data";
 
 // Empuje extra (%) que se suma a la capa que está bajo el cursor.
@@ -9,11 +9,15 @@ const HOVER_LIFT = 3;
 export function ExplodedView() {
   const stageRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
+  const [stageHeight, setStageHeight] = useState(0);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   // Misma lógica manual de ProcessSteps.tsx: mide la posición del "escenario"
   // 3D respecto al centro del viewport y la convierte en un valor 0-1.
-  useEffect(() => {
+  // El listener de scroll solo queda activo mientras el escenario está cerca
+  // del viewport (IntersectionObserver): en el resto del scroll de la página
+  // no se ejecuta ningún cálculo, que es lo que se sentía lento en mobile.
+  useLayoutEffect(() => {
     const el = stageRef.current;
     if (!el) return;
 
@@ -25,6 +29,7 @@ export function ExplodedView() {
       const scrollWindow = window.innerHeight * 0.6;
       const raw = (viewportCenter - rect.top) / scrollWindow;
       setProgress(Math.min(1, Math.max(0, raw)));
+      setStageHeight(rect.height);
     };
 
     const onScroll = () => {
@@ -32,10 +37,31 @@ export function ExplodedView() {
       frameId = requestAnimationFrame(update);
     };
 
+    // Medición inicial siempre, aunque el escenario esté fuera de vista,
+    // para que las placas arranquen ya centradas y no en 0.
     update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+
+    let listening = false;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !listening) {
+          listening = true;
+          update();
+          window.addEventListener("scroll", onScroll, { passive: true });
+          window.addEventListener("resize", onScroll);
+        } else if (!entry.isIntersecting && listening) {
+          listening = false;
+          cancelAnimationFrame(frameId);
+          window.removeEventListener("scroll", onScroll);
+          window.removeEventListener("resize", onScroll);
+        }
+      },
+      { rootMargin: "200px 0px" }
+    );
+    observer.observe(el);
+
     return () => {
+      observer.disconnect();
       cancelAnimationFrame(frameId);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
@@ -80,6 +106,12 @@ export function ExplodedView() {
             let topPercent = 50 + (targetPercent - 50) * progress;
             if (isHovered) topPercent -= HOVER_LIFT;
 
+            // Posición vertical resuelta en px y aplicada vía transform en
+            // vez de "top": así la anima el compositor (GPU) sin disparar
+            // layout/reflow en cada frame de scroll, que es lo que se sentía
+            // trabado en mobile.
+            const offsetY = (topPercent / 100) * stageHeight;
+
             const scale = isHovered ? 1.05 : 1;
             const zIndex = index;
 
@@ -89,11 +121,11 @@ export function ExplodedView() {
                   key={layer.id}
                   onMouseEnter={() => setHoveredId(layer.id)}
                   onMouseLeave={() => setHoveredId(null)}
-                  className="absolute left-1/2 w-full max-w-lg -translate-x-1/2 transition-[top] duration-500 ease-out"
-                  style={{ top: `${topPercent}%`, zIndex }}
+                  className="absolute left-1/2 top-0 w-full max-w-lg will-change-transform transition-transform duration-500 ease-out"
+                  style={{ transform: `translate3d(-50%, ${offsetY}px, 0)`, zIndex }}
                 >
                   <div
-                    className="h-20 rounded-2xl border-2 border-dashed backdrop-blur-sm transition-[border-color,background-color,transform] duration-300 ease-out sm:h-24 lg:h-28"
+                    className="h-20 rounded-2xl border-2 border-dashed backdrop-blur-none transition-[border-color,background-color,transform] duration-300 ease-out sm:h-24 sm:backdrop-blur-sm lg:h-28"
                     style={{
                       transform: `translateY(-50%) rotateX(58deg) scale(${scale})`,
                       background: isHovered
@@ -113,8 +145,8 @@ export function ExplodedView() {
                 key={layer.id}
                 onMouseEnter={() => setHoveredId(layer.id)}
                 onMouseLeave={() => setHoveredId(null)}
-                className="absolute left-1/2 w-full max-w-lg -translate-x-1/2 transition-[top] duration-500 ease-out"
-                style={{ top: `${topPercent}%`, zIndex }}
+                className="absolute left-1/2 top-0 w-full max-w-lg will-change-transform transition-transform duration-500 ease-out"
+                style={{ transform: `translate3d(-50%, ${offsetY}px, 0)`, zIndex }}
               >
                 <div
                   className="h-20 overflow-hidden rounded-2xl ring-1 transition-[box-shadow,transform] duration-300 ease-out sm:h-24 lg:h-28"

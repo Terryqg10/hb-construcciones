@@ -6,8 +6,12 @@ import { ArrowRight, Menu, MessageCircle, Phone, X } from "lucide-react";
 import { navLinks } from "@/lib/nav-links";
 import { siteConfig } from "@/lib/site-config";
 
-export function NavMenu() {
-  const [isOpen, setIsOpen] = useState(false);
+interface NavMenuProps {
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+}
+
+export function NavMenu({ isOpen, onOpenChange }: NavMenuProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -22,13 +26,13 @@ export function NavMenu() {
     };
   }, [isOpen]);
 
-  const close = () => setIsOpen(false);
+  const close = () => onOpenChange(false);
 
   return (
     <div className="relative">
       <button
         type="button"
-        onClick={() => setIsOpen((previous) => !previous)}
+        onClick={() => onOpenChange(!isOpen)}
         aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
         aria-expanded={isOpen}
         className="relative z-50 flex h-10 w-10 items-center justify-center rounded-full text-slate-900 transition hover:bg-slate-100 active:scale-95"

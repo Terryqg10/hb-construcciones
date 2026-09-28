@@ -98,8 +98,8 @@ export function Hero() {
           </div>
 
           {/* Texto principal: bloque normal debajo de la foto en mobile, overlay a la izquierda en desktop */}
-          <div className="hidden lg:absolute lg:inset-0 lg:flex lg:flex-col lg:justify-start lg:px-14 lg:pt-16 xl:px-16">
-            <div className="max-w-[560px]">
+          <div className="hidden lg:pointer-events-none lg:absolute lg:inset-0 lg:flex lg:flex-col lg:justify-start lg:px-14 lg:pt-16 xl:px-16">
+            <div className="pointer-events-auto max-w-[560px]">
               <span className="inline-flex w-fit items-center rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white">
                 Reformas · Piscinas · Obra Nueva
               </span>

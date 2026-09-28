@@ -60,7 +60,7 @@ export function BeforeAfterSlider({ item }: { item: BeforeAfterItem }) {
             setHasInteracted(true);
           }}
           aria-label={`Comparar antes y después: ${item.label}`}
-          className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0"
+          className="absolute inset-0 h-full w-full cursor-ew-resize touch-pan-y opacity-0"
         />
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { advantages } from "@/lib/advantages-data";
 import { Reveal } from "@/components/ui/Reveal";
+import { AnimatedStat } from "@/components/ui/AnimatedStat";
 
 export function WhyChooseUs() {
   return (
@@ -19,9 +20,10 @@ export function WhyChooseUs() {
               className={index % 2 === 1 ? "lg:mt-6" : ""}
             >
               <div className="flex h-full flex-col items-center gap-2 rounded-2xl bg-white p-8 text-center transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-lg">
-                <p className="text-5xl font-extrabold tracking-tight text-brand">
-                  {advantage.stat}
-                </p>
+                <AnimatedStat
+                  value={advantage.stat}
+                  className="text-5xl font-extrabold tracking-tight text-brand"
+                />
                 <h3 className="mt-2 text-lg font-bold text-slate-900">
                   {advantage.title}
                 </h3>

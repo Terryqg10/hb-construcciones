@@ -96,12 +96,11 @@ Ver `spec.md` para el detalle de cada punto. Ninguna de estas tareas está ejecu
 - [x] **A6.** `npx tsc --noEmit`, `npx eslint .` y `npm run build` sin errores (los 2 errores de eslint restantes son preexistentes, en `NavMenu.tsx`/`VideoDemo.tsx`, sin relación con esta tarea).
 - [x] **A7.** Verificación visual con el sitio corriendo: 8 enlaces de menú probados con clic real en desktop y mobile, todos apuntan a una sección existente, sin errores de consola. Ritmo de fondos confirmado: Servicios(gris) → Valoraciones(blanco) → FAQ(gris).
 - [x] **A8.** Commit (branch `claude/inspiring-newton-3626es`, merge a `master`).
-
-### G14 — Diferida, requiere tu confirmación aparte
-
-- [ ] **G14.** Borrar las 3 imágenes que quedan sin ningún uso tras T1-T8:
+- [x] **A9.** Confirmado y borrado: las 3 imágenes que quedaban sin ningún uso tras A1-A8:
   - `public/before-after/before-piscina-v2.jpg`
   - `public/before-after/before-cocina.jpg`
   - `public/before-after/before-bano.jpg`
 
-  **Corrección:** `gallery-01.jpg`, `gallery-02.jpg` y `gallery-03.jpg` NO entran acá — siguen en uso activo en `Gallery.tsx` ("Nuestros Trabajos"), por eso no están en esta lista aunque también aparecían como imagen "after" en el slider que se elimina.
+  (no reusa el número G14 — ese ya corresponde a la tarea de Parte 3 de más arriba)
+
+- [ ] **A10.** Pendiente de tu confirmación, NO ejecutada: tras el rework de la galería (que eliminó `gallery-data.ts`), `public/gallery/gallery-01.jpg`, `gallery-02.jpg` y `gallery-03.jpg` dejaron de tener cualquier referencia en `src/` (verificado por grep). Ya no es cierto que sigan en uso por `Gallery.tsx` como decía la nota anterior — eso cambió con tu rework, no con esta tarea. No las borro hasta que lo confirmes.

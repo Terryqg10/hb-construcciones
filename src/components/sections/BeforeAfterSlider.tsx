@@ -14,7 +14,13 @@ export function BeforeAfterSlider({ item }: { item: BeforeAfterItem }) {
       <p className="text-sm font-semibold text-slate-900">{item.label}</p>
 
       <div className="group relative aspect-4/3 select-none overflow-hidden rounded-2xl">
-        <Image src={item.after} alt={`${item.label} después`} fill className="object-cover" />
+        <Image
+          src={item.after}
+          alt={`${item.label} después`}
+          fill
+          sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 100vw"
+          className="object-cover"
+        />
 
         <div
           className="absolute inset-y-0 left-0 overflow-hidden"
@@ -24,6 +30,7 @@ export function BeforeAfterSlider({ item }: { item: BeforeAfterItem }) {
             src={item.before}
             alt={`${item.label} antes`}
             fill
+            sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 100vw"
             className="object-cover"
           />
         </div>

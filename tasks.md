@@ -103,4 +103,4 @@ Ver `spec.md` para el detalle de cada punto. Ninguna de estas tareas está ejecu
 
   (no reusa el número G14 — ese ya corresponde a la tarea de Parte 3 de más arriba)
 
-- [ ] **A10.** Pendiente de tu confirmación, NO ejecutada: tras el rework de la galería (que eliminó `gallery-data.ts`), `public/gallery/gallery-01.jpg`, `gallery-02.jpg` y `gallery-03.jpg` dejaron de tener cualquier referencia en `src/` (verificado por grep). Ya no es cierto que sigan en uso por `Gallery.tsx` como decía la nota anterior — eso cambió con tu rework, no con esta tarea. No las borro hasta que lo confirmes.
+- [x] **A10.** Confirmado y borrado: `public/gallery/gallery-01.jpg`, `gallery-02.jpg` y `gallery-03.jpg`, sin ninguna referencia en `src/` tras el rework de la galería.

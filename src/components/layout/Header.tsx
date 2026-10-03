@@ -18,16 +18,13 @@ export function Header() {
           onNavigate={() => setIsMenuOpen(false)}
         >
           <Image
-            src="/brand/hb-icon.png"
+            src="/brand/hb-logo-cliente.webp"
             alt="HB Construcciones"
-            width={424}
-            height={222}
+            width={748}
+            height={633}
             priority
-            className="h-8 w-auto"
+            className="h-12 w-auto mix-blend-multiply"
           />
-          <span className="hidden text-lg font-bold tracking-tight text-slate-900 sm:inline">
-            Construcciones
-          </span>
         </HomeLink>
 
         <div className="flex items-center gap-2">

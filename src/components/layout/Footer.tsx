@@ -8,11 +8,11 @@ export function Footer() {
   return (
     <footer className="border-t border-slate-100 bg-slate-50 px-6 py-10 text-center">
       <Image
-        src="/brand/hb-icon.png"
+        src="/brand/hb-logo-cliente.webp"
         alt={siteConfig.brandName}
-        width={424}
-        height={222}
-        className="mx-auto h-8 w-auto"
+        width={748}
+        height={633}
+        className="mx-auto h-24 w-auto mix-blend-multiply"
       />
       <p className="mt-4 text-xs text-slate-400">
         © {year} {siteConfig.brandName}. Todos los derechos reservados.

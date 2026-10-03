@@ -36,14 +36,14 @@
 - [x] V11. `VideoCard.tsx` (Client): portada con `next/image`, botón play accesible, montaje del `<video>` bajo demanda.
 - [x] V12. `VideoCard`: un solo vídeo a la vez (evento `hb:video-play`), foco al vídeo, `play()` con gestión de rechazo. El listener se registra en un efecto y se **elimina al desmontar** (cleanup con `removeEventListener`).
 - [x] V13. `VideoGallery.tsx` (Server): cabecera, disposición responsive y botones TikTok + WhatsApp. Móvil: carrusel con scroll-snap y un trozo visible de la siguiente tarjeta; el contenedor es navegable por teclado (`tabindex="0"`, `role="region"`, `aria-label`) y el scroll no interfiere con el play (sin `preventDefault`, `touch-action: pan-x`). Escritorio: fila centrada.
-- [ ] V14. Integrar en `Gallery.tsx` y eliminar `VideoDemo.tsx`. **BLOQUEADA:** no se inicia (ni se toca `Gallery.tsx`) hasta que la Parte 3 esté cerrada y commiteada, o tú indiques lo contrario.
-- [ ] V14b. Unificar a "vídeo" (con tilde, forma RAE) toda la web. Hoy solo aparece "video" en `VideoDemo.tsx` (se elimina en V14), así que no queda nada más por cambiar; se comprobará con grep.
+- [x] V14. Integrar en `Gallery.tsx` y eliminar `VideoDemo.tsx`. **BLOQUEADA:** no se inicia (ni se toca `Gallery.tsx`) hasta que la Parte 3 esté cerrada y commiteada, o tú indiques lo contrario.
+- [x] V14b. Unificar a "vídeo" (con tilde, forma RAE) toda la web. Hoy solo aparece "video" en `VideoDemo.tsx` (se elimina en V14), así que no queda nada más por cambiar; se comprobará con grep.
 
 ### QA
 - [x] V15. `tsc --noEmit`, `eslint`, búsqueda de `any`/`@ts-ignore`, auditoría de `href`/`onClick`.
 - [x] V16. Navegador a 375 px y escritorio con 1, 3 y 5 clips (capturas).
 - [x] V17. Pestaña de red: cero peticiones a `.mp4` hasta pulsar play; un solo vídeo a la vez; teclado (Tab/Enter/Espacio) y foco visible.
-- [ ] V18. Revisión final y limpieza (referencias a `demo.mp4`, `public/videos` completo).
+- [x] V18. Revisión final y limpieza (referencias a `demo.mp4`, `public/videos` completo).
 
 
 ## Parte 3 — Galería con fotos reales (cada tarea espera tu visto bueno antes de pasar a la siguiente)

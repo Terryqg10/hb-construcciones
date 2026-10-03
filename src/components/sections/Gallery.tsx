@@ -1,7 +1,7 @@
 import { galleryPhotos } from "@/lib/galeria-data";
 import { Reveal } from "@/components/ui/Reveal";
 import { GalleryGrid } from "@/components/ui/GalleryGrid";
-import { VideoDemo } from "@/components/sections/VideoDemo";
+import { VideoGallery } from "@/components/sections/VideoGallery";
 
 export function Gallery() {
   return (
@@ -15,7 +15,7 @@ export function Gallery() {
 
         <GalleryGrid photos={galleryPhotos} />
 
-        <VideoDemo />
+        <VideoGallery />
       </div>
     </section>
   );

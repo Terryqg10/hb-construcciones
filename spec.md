@@ -108,7 +108,7 @@ Funciones puras: `parseCropdetect`, `pickCrop`, `buildVideoFilter`, `formatMegab
 ### Archivos
 | Archivo | Tipo | Responsabilidad |
 |---|---|---|
-| `src/lib/video-data.ts` | datos | `VideoItem { id, src, poster, title }` tipado y lista de clips. **Sustituye** al demo actual. |
+| `src/lib/video-clips.ts` | datos | `VideoClip { id, title, posterAt? }` y lista de clips; `videoSrc`/`posterSrc` derivan las rutas del `id`. **Sustituye** a `video-data.ts` (eliminado). |
 | `src/lib/site-config.ts` | datos | Añadir `tiktokHref` (`https://www.tiktok.com/@hbreformasengeneral`). WhatsApp ya existe (`whatsappHref`). |
 | `src/components/sections/VideoGallery.tsx` | **Server** | Cabecera, disposición de tarjetas, botones TikTok y WhatsApp. Sin estado. |
 | `src/components/ui/VideoCard.tsx` | **Client** (único) | Portada + botón play; al pulsar monta `<video>`. |
@@ -137,7 +137,7 @@ Por qué solo `VideoCard` es Client: es lo único que necesita estado (`playing`
 ### Textos (español de España, tuteo)
 - Título: "Nuestras obras en vídeo"; subtítulo: "Así trabajamos, directamente desde la obra."
 - Botones: "Ver más en TikTok" / "Escríbenos por WhatsApp".
-- Títulos de clip: provisionales, a validar contigo al implementar `video-data.ts`.
+- Títulos de clip: definidos en `video-clips.ts`, derivados de los nombres descriptivos aprobados.
 
 ## 2.C QA y criterios de aceptación
 - `npm run videos` genera 5 `.mp4` + 5 `.webp` verticales (≈ 608×1080); segunda ejecución → 0 procesados, 5 saltados; un archivo corrupto no detiene el resto; aviso si algún `.mp4` > 4 MB.

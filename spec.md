@@ -338,3 +338,44 @@ Tres secciones grises seguidas — un hueco visual real. Propuesta: cambiar `Tes
 - `npm run build` genera la home sin la sección.
 - Ningún enlace del menú (incluido mobile) apunta a un ancla inexistente — se verifica haciendo clic en cada uno.
 - Sin dependencias nuevas en `package.json`.
+
+
+---
+
+# Parte 5 — Carrusel de vídeos más guiado en móvil
+
+## Problema
+En móvil (< 640 px) los vídeos van en un carrusel horizontal que enseña una tarjeta y un trozo de la siguiente. Una persona poco familiarizada con las webs puede no darse cuenta de que se desliza: no hay ninguna pista visible, y la sección se ve vacía y pasiva.
+
+## Objetivo
+Que cualquier visitante entienda sin ayuda que hay más vídeos y sepa cómo verlos, tocando o deslizando, sin quitar nada de lo que ya funciona.
+
+## Cambios (solo < 640 px; en escritorio no se muestra nada nuevo)
+1. **Flechas anterior / siguiente:** dos botones circulares (`rounded-full`, blancos con sombra suave) sobre los bordes laterales del carrusel, centrados en vertical. Tamaño táctil mínimo 44 × 44 px. Cada flecha avanza o retrocede **una tarjeta**. La del extremo no aplicable se oculta (no se deja un botón muerto).
+2. **Indicador de posición:** puntos bajo el carrusel (uno por clip, el activo en `brand`), con un texto "Vídeo 2 de 5" para lectores de pantalla (`aria-live="polite"`). Los puntos son botones que llevan a ese clip.
+3. **Texto guía:** una línea bajo los puntos (así, al desaparecer, no mueve el carrusel bajo el dedo), solo móvil: "Desliza o pulsa las flechas para ver más vídeos." Desaparece tras la primera interacción (flecha, punto o deslizar). Español de España, tuteo.
+4. **Foco y teclado:** las flechas son `<button type="button">` con `aria-label` ("Ver el vídeo anterior" / "Ver el vídeo siguiente") y foco visible; el contenedor sigue siendo navegable con flechas del teclado (`tabindex="0"`).
+5. **Sin interferir con el play:** las flechas se colocan fuera del área central de la tarjeta (el botón de play queda libre) y no usan `preventDefault` sobre el gesto de scroll.
+6. **`prefers-reduced-motion`:** el desplazamiento de las flechas es instantáneo (sin animación suave) para quien lo tenga activado.
+
+## Decisión de arquitectura
+- `VideoGallery` sigue siendo **Server Component** (cabecera, texto, botones TikTok/WhatsApp).
+- Nuevo Client Component pequeño `VideoCarousel` (`src/components/ui/VideoCarousel.tsx`): recibe las tarjetas como `children` y envuelve la lista actual. Solo contiene el estado de posición, las flechas y los puntos.
+- `VideoCard` no cambia.
+- Posición activa: `IntersectionObserver` sobre cada `li` (sin listener de `scroll` ni dependencias). Desplazar: `scrollTo({ left, behavior })` calculado a partir de los `li`.
+- Sin dependencias nuevas, sin `any` ni `@ts-ignore`.
+- Iconos: `ChevronLeft` y `ChevronRight` de `lucide-react` (ya instalada).
+
+## Criterios de aceptación
+- A 375 px se ven las flechas, los puntos y el texto guía; en ≥ 640 px no aparece ninguno.
+- Con 1 clip no se muestran flechas ni puntos; con 3 y 5 funcionan.
+- Pulsar la flecha avanza exactamente una tarjeta; el punto activo cambia también al deslizar con el dedo.
+- La flecha izquierda no existe en el primer clip y la derecha no existe en el último.
+- El botón de play de cada tarjeta sigue funcionando con las flechas visibles.
+- Todos los botones tienen `onClick` válido, `aria-label` y foco visible; sin scroll horizontal de la página.
+- `tsc`, `eslint` (sin errores nuevos) y `next build` limpios.
+
+## Fuera de alcance
+Autoplay del carrusel, bucle infinito, gestos personalizados, cambios en escritorio.
+
+

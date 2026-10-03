@@ -3,6 +3,7 @@ import { siteConfig } from "@/lib/site-config";
 import { videoClips, type VideoClip } from "@/lib/video-clips";
 import { Reveal } from "@/components/ui/Reveal";
 import { VideoCard } from "@/components/ui/VideoCard";
+import { VideoCarousel } from "@/components/ui/VideoCarousel";
 
 interface VideoGalleryProps {
   /** Clips a mostrar; por defecto, todos los de video-clips.ts. */
@@ -26,22 +27,13 @@ export function VideoGallery({ clips = videoClips }: VideoGalleryProps) {
         </p>
       </Reveal>
 
-      {/* Móvil: carrusel con scroll-snap que deja ver un trozo de la siguiente tarjeta.
-          Desde sm: fila centrada que salta de línea. */}
-      <div
-        role="region"
-        aria-label="Vídeos de obras, desplázate para ver más"
-        tabIndex={0}
-        className={`-mx-6 mt-8 snap-x snap-mandatory overflow-x-auto scroll-px-6 rounded-2xl [scrollbar-width:none] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand sm:mx-0 sm:overflow-visible [&::-webkit-scrollbar]:hidden`}
-      >
-        <ul className="flex w-max min-w-full gap-4 px-6 py-1 max-sm:justify-center sm:w-full sm:flex-wrap sm:justify-center sm:px-0">
-          {clips.map((clip) => (
-            <li key={clip.id} className="w-[68vw] max-w-64 shrink-0 snap-start sm:w-56 sm:max-w-none lg:w-52">
-              <VideoCard clip={clip} />
-            </li>
-          ))}
-        </ul>
-      </div>
+      <VideoCarousel>
+        {clips.map((clip) => (
+          <li key={clip.id} className="w-[68vw] max-w-64 shrink-0 snap-start sm:w-56 sm:max-w-none lg:w-52">
+            <VideoCard clip={clip} />
+          </li>
+        ))}
+      </VideoCarousel>
 
       <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <a

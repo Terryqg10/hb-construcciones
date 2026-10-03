@@ -104,3 +104,13 @@ Ver `spec.md` para el detalle de cada punto. Ninguna de estas tareas está ejecu
   (no reusa el número G14 — ese ya corresponde a la tarea de Parte 3 de más arriba)
 
 - [x] **A10.** Confirmado y borrado: `public/gallery/gallery-01.jpg`, `gallery-02.jpg` y `gallery-03.jpg`, sin ninguna referencia en `src/` tras el rework de la galería.
+
+
+## Parte 5 — Carrusel de vídeos más guiado en móvil (cada tarea espera tu visto bueno)
+
+- [x] C1. `VideoCarousel.tsx` (Client): contenedor con la lista como `children`, estado de posición activa con `IntersectionObserver` y función `scrollToIndex` (respeta `prefers-reduced-motion`).
+- [x] C2. Flechas anterior/siguiente (solo `< sm`): `aria-label`, 44 px, foco visible, ocultas en los extremos y con 1 clip.
+- [x] C3. Puntos de posición clicables + texto "Vídeo X de N" para lectores de pantalla.
+- [x] C4. Integrar en `VideoGallery.tsx` (sigue Server): envolver la lista, añadir el texto guía solo móvil.
+- [x] C5. QA: `tsc`, `eslint`, `any`/`@ts-ignore`, auditoría de `onClick`, navegador a 375 px con 1, 3 y 5 clips, comprobar que el play sigue libre, escritorio sin cambios, `next build`.
+- [x] C6. Commit.

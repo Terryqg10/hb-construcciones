@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { LegalLayout } from "@/components/layout/LegalLayout";
-import { location } from "@/lib/location-data";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -11,6 +10,7 @@ export const metadata: Metadata = {
 export default function PoliticaPrivacidadPage() {
   return (
     <LegalLayout title="Política de Privacidad" updated="3 de octubre de 2026">
+      {/* Oculto hasta tener los datos reales del titular (nombre, NIF y email). Para mostrarlo, descomentar y volver a importar `location` de "@/lib/location-data".
       <section className="flex flex-col gap-3">
         <h2>1. Responsable del tratamiento</h2>
         <ul>
@@ -29,6 +29,7 @@ export default function PoliticaPrivacidadPage() {
           </li>
         </ul>
       </section>
+      */}
 
       <section className="flex flex-col gap-3">
         <h2>2. Qué datos recogemos</h2>

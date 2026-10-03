@@ -106,12 +106,6 @@ export const galleryPhotos: readonly GalleryPhoto[] = [
     height: 1600,
   },
   {
-    src: "/gallery/cocina-fregadero-acero-grifo-agua.webp",
-    alt: "Grifo de cocina cromado con un chorro de agua cayendo en un fregadero de acero inoxidable sobre encimera negra",
-    width: 900,
-    height: 1600,
-  },
-  {
     src: "/gallery/suelo-radiante-esquina-mortero.webp",
     alt: "Esquina de una habitación con el mortero del suelo radiante extendiéndose sobre el panel de tetones y las tuberías rojas, con banda perimetral azul",
     width: 864,

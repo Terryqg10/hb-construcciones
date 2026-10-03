@@ -46,3 +46,6 @@ next-env.d.ts
 # frames: vídeos fuente y fotogramas candidatos
 /videos
 /candidatas
+
+# vídeos de obra: clips originales sin procesar (las salidas van a /public/videos)
+/videos-seleccionados

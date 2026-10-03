@@ -1,4 +1,6 @@
-# spec.md — Extractor de fotogramas para la galería
+# spec.md
+
+# Parte 1 — Extractor de fotogramas para la galería (hecho)
 
 ## Propósito
 Script reutilizable que genera fotogramas candidatos a partir de vídeos de obras terminadas. La selección final para la galería se hace a mano. El script no toca `public/` ni `src/`.
@@ -58,3 +60,93 @@ Copiar a `public/`, modificar componentes, detección automática del "mejor" fo
 - Un vídeo corrupto no detiene el resto y aparece en el resumen.
 - Ninguna imagen supera 1600 px de lado mayor, y ninguna se amplía.
 - `tsc --noEmit` pasa sin errores y sin `any` ni `@ts-ignore`.
+
+
+---
+
+# Parte 2 — Sección "Vídeos de obras" (sustituye a "Video del proyecto")
+
+## Propósito
+Sustituir el hueco de vídeo de la galería por 3–5 clips verticales de obras, con portada ligera, reproducción bajo demanda y llamadas a la acción (TikTok y WhatsApp). La página no debe cargar ningún vídeo hasta que el usuario pulse play.
+
+## Hallazgo sobre los vídeos de origen
+Los 5 clips de `/videos-seleccionados` (`1.mp4`…`5.mp4`, ~20 s, 20–40 MB, H.264) miden **1920×1080 sin metadato de rotación**: el contenido vertical va incrustado en un lienzo apaisado con barras negras laterales. `cropdetect` da `608×1080` con desplazamiento `656:0` en todos (≈ 9:16). Si solo se escalara, las portadas y los .mp4 saldrían apaisados con barras. Por eso el script **detecta y recorta el área útil** (regla 4).
+
+## 2.A Script `npm run videos` → `scripts/process-videos.mts`
+
+### Entrada / salida
+| | Ruta (raíz del proyecto) | Notas |
+|---|---|---|
+| Entrada | `/videos-seleccionados/*.mp4`, `*.mov` | Extensión sin distinguir mayúsculas. No recursivo. |
+| Salida vídeo | `/public/videos/<slug>.mp4` | H.264, ≤ 720 px de ancho, CRF 28, sin audio, `+faststart` |
+| Salida portada | `/public/videos/<slug>.webp` | Fotograma al 30 % de la duración, lado mayor ≤ 1600 px, calidad 80 |
+
+Las rutas se resuelven desde `scripts/..`. Requisitos: Node ≥ 24 y `ffmpeg`/`ffprobe` en el PATH. `.gitignore`: añadir `/videos-seleccionados`. Las salidas de `/public/videos` **sí** se versionan, porque la web las sirve.
+
+### Reglas
+1. **Slugs y orden:** misma lógica que `extract-frames.mts` (`slugify` + asignación anti-colisión sobre la lista ordenada con `localeCompare`). Para no duplicar código se extrae a `scripts/lib/slug.mts` y ambos scripts lo importan (cambio mecánico, sin alterar el comportamiento de `frames`). `1.mp4` → slug `1`; si prefieres nombres descriptivos, basta renombrar el origen.
+2. **Vídeo:** `ffmpeg -vf "<crop>,scale='min(720,iw)':-2,format=yuv420p" -c:v libx264 -crf 28 -preset medium -an -movflags +faststart -map_metadata -1`. Nunca se amplía. Dimensiones pares (`-2`).
+3. **Rotación:** se respeta el autorrotado de ffmpeg (metadato de rotación). Las dimensiones se leen con `ffprobe` *después* de rotar, así que un vídeo vertical siempre produce portada y .mp4 verticales.
+4. **Recorte de barras:** `cropdetect=limit=24:round=2` sobre 10 s a partir del 10 % del vídeo; se toma el recorte más frecuente. Solo se aplica si elimina ≥ 5 % del área; si no, no se recorta. Mismo recorte para vídeo y portada.
+5. **Portada:** un fotograma en `duración × 0.3`, con el mismo recorte, `scale='min(1600,iw)':'min(1600,ih)':force_original_aspect_ratio=decrease`, WebP calidad 80, `-map_metadata -1`.
+6. **Idempotencia:** si existen `<slug>.mp4` y `<slug>.webp`, se salta. Si falta alguno, se rehacen ambos. Escritura en `.tmp.mp4` / `.tmp.webp` y renombrado al final; ante fallo se borran los temporales.
+7. **Tolerancia a fallos:** `try/catch` por clip; el proceso continúa.
+8. **Resumen final:** procesados / saltados / fallidos (con motivo). Aviso por cada `.mp4` de salida > 4 MB (también entre los saltados). Código de salida 1 si hay fallidos.
+9. **Comprobación previa:** igual que en la Parte 1 (ffmpeg/ffprobe, carpeta de entrada existente, creación de `public/videos`).
+
+### Estructura
+```ts
+interface VideoJob { sourcePath: string; fileName: string; slug: string }
+interface CropBox { width: number; height: number; x: number; y: number }
+type VideoStatus = "processed" | "skipped" | "failed"
+interface VideoResult { job: VideoJob; status: VideoStatus; error?: string; sizeBytes?: number }
+```
+Funciones puras: `parseCropdetect`, `pickCrop`, `buildVideoFilter`, `formatMegabytes`. Con I/O: `run`, `detectCrop`, `probeDuration`, `encodeVideo`, `extractPoster`, `processVideo`, `main`.
+
+## 2.B Componentes y datos
+
+### Archivos
+| Archivo | Tipo | Responsabilidad |
+|---|---|---|
+| `src/lib/video-data.ts` | datos | `VideoItem { id, src, poster, title }` tipado y lista de clips. **Sustituye** al demo actual. |
+| `src/lib/site-config.ts` | datos | Añadir `tiktokHref` (`https://www.tiktok.com/@hbreformasengeneral`). WhatsApp ya existe (`whatsappHref`). |
+| `src/components/sections/VideoGallery.tsx` | **Server** | Cabecera, disposición de tarjetas, botones TikTok y WhatsApp. Sin estado. |
+| `src/components/ui/VideoCard.tsx` | **Client** (único) | Portada + botón play; al pulsar monta `<video>`. |
+| `src/components/sections/Gallery.tsx` | Server | Cambia `VideoDemo` por `VideoGallery`. |
+| `src/components/sections/VideoDemo.tsx` | — | **Se elimina** (modal con "Video del proyecto"). |
+
+Por qué solo `VideoCard` es Client: es lo único que necesita estado (`playing`), refs y eventos. La sección, los textos y los enlaces son estáticos y se renderizan en servidor. `Reveal` es un Client Component autónomo que acepta `children`, así que puede usarse desde el servidor sin convertir la sección en cliente.
+
+### `VideoCard`
+- Props: `video: VideoItem`.
+- Estado `playing: boolean`. Antes del clic: `<button>` con `aria-label="Reproducir vídeo: {title}"`, `next/image` (`fill`, `object-cover`) e icono Play. Tras el clic: `<video controls playsInline preload="none" poster>` con `autoPlay` y `play()` en un efecto, y foco movido al `<video>` para no perderlo al desaparecer el botón.
+- **Un solo vídeo a la vez:** al empezar, cada tarjeta emite un evento `hb:video-play` en `window` con su `id`; las demás, si lo reciben con otro `id`, vuelven a la portada (se desmonta su `<video>`). Sin estado global ni dependencias.
+- **Se puede pausar:** controles nativos (botón de pausa, clic sobre el vídeo y barra espaciadora).
+- **Foco visible:** `focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2`.
+- `aria-label` en el vídeo (`Vídeo de obra: {title}`).
+
+### Maquetación
+- Tarjeta `aspect-[9/16] rounded-2xl overflow-hidden bg-slate-900`.
+- **Escritorio (≥ 640 px):** `flex flex-wrap justify-center gap-4`, ancho fijo de tarjeta (`w-56` en `sm`, `w-52` en `lg`). Con 1, 3 o 5 clips quedan centrados y 5 caben en una fila (5 × 208 + 4 × 16 = 1104 ≤ 1152).
+- **Móvil (375 px):** carrusel horizontal `snap-x snap-mandatory` con tarjetas `w-[68vw] max-w-64` y relleno lateral para ver el borde de la siguiente. Con 1 clip queda centrado.
+- `sizes` de la portada: `(min-width: 1024px) 208px, (min-width: 640px) 224px, 68vw`.
+- Debajo, `flex flex-col sm:flex-row items-center justify-center gap-3`:
+  1. "Ver más en TikTok" → `siteConfig.tiktokHref`, `target="_blank" rel="noopener noreferrer"`, estilo secundario (`rounded-full`, sin borde duro).
+  2. "Escríbenos por WhatsApp" → `siteConfig.whatsappHref` (mismo enlace y mensaje que el resto de la web), mismo estilo y `target`/`rel` que el botón del Hero.
+
+### Textos (español de España, tuteo)
+- Título: "Nuestras obras en vídeo"; subtítulo: "Así trabajamos, directamente desde la obra."
+- Botones: "Ver más en TikTok" / "Escríbenos por WhatsApp".
+- Títulos de clip: provisionales, a validar contigo al implementar `video-data.ts`.
+
+## 2.C QA y criterios de aceptación
+- `npm run videos` genera 5 `.mp4` + 5 `.webp` verticales (≈ 608×1080); segunda ejecución → 0 procesados, 5 saltados; un archivo corrupto no detiene el resto; aviso si algún `.mp4` > 4 MB.
+- Ningún `.mp4` supera 720 px de ancho; ninguna portada supera 1600 px de lado mayor.
+- `tsc --noEmit` y `eslint` limpios; cero `any` y cero `@ts-ignore`; sin dependencias nuevas.
+- Todos los botones con `href` u `onClick` válido; sin enlaces muertos; `rel` correcto en los enlaces externos.
+- Comprobado a 375 px y a escritorio con 1, 3 y 5 clips.
+- **Carga diferida verificada:** en la pestaña de red, al cargar la página no aparece ninguna petición a `/videos/*.mp4` (solo las portadas `.webp`); el `.mp4` se pide solo tras pulsar play.
+- Al reproducir un clip, el que estuviera sonando vuelve a su portada.
+
+## Fuera de alcance
+Audio/subtítulos, analíticas de reproducción, lightbox/modal, reproducción automática al entrar en pantalla.

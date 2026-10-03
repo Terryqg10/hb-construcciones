@@ -6,6 +6,7 @@ import { access, mkdir, readdir, rename, rm, writeFile } from "node:fs/promises"
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
+import { assignSlugs } from "./lib/slug.mts";
 
 const execFileAsync = promisify(execFile);
 
@@ -36,29 +37,14 @@ interface VideoResult {
   error?: string;
 }
 
-// ───────────── Slug (lógica pura) ─────────────
+// ───────────── Jobs (slugs compartidos con process-videos) ─────────────
 
-function slugify(fileName: string): string {
-  const base = path.parse(fileName).name;
-  const slug = base
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-  return slug === "" ? "video" : slug;
-}
-
-// Asigna un slug único a cada vídeo; ante colisiones añade -2, -3...
 function buildJobs(fileNames: readonly string[]): VideoJob[] {
-  const used = new Set<string>();
-  return [...fileNames].sort((a, b) => a.localeCompare(b)).map((fileName) => {
-    const base = slugify(fileName);
-    let slug = base;
-    for (let n = 2; used.has(slug); n += 1) slug = `${base}-${n}`;
-    used.add(slug);
-    return { sourcePath: path.join(VIDEOS_DIR, fileName), fileName, slug };
-  });
+  return assignSlugs(fileNames).map(({ fileName, slug }) => ({
+    sourcePath: path.join(VIDEOS_DIR, fileName),
+    fileName,
+    slug,
+  }));
 }
 
 function frameFileName(slug: string, index: number): string {

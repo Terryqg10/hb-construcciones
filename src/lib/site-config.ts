@@ -5,6 +5,7 @@ interface SiteConfig {
   readonly whatsappNumber: string;
   readonly whatsappMessage: string;
   readonly whatsappHref: string;
+  readonly tiktokHref: string;
 }
 
 const whatsappNumber = "34641087374";
@@ -17,6 +18,7 @@ export const siteConfig: SiteConfig = {
   whatsappNumber,
   whatsappMessage,
   whatsappHref: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`,
+  tiktokHref: "https://www.tiktok.com/@hbreformasengeneral",
 };
 
 export function buildWhatsAppHref(message: string): string {

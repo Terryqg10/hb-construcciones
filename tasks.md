@@ -16,9 +16,9 @@ Ver `spec.md` para el detalle de cada punto. Ninguna de estas tareas está ejecu
 - [x] **T7.** Verificación visual con el sitio corriendo: 8 enlaces de menú probados con clic real en desktop y mobile, todos apuntan a una sección existente, sin errores de consola. Ritmo de fondos confirmado: Servicios(gris) → Valoraciones(blanco) → FAQ(gris).
 - [x] **T8.** Commit (branch `claude/inspiring-newton-3626es`, merge a `master`).
 
-## G14 — Diferida, requiere tu confirmación aparte
+## G14 — Confirmada y ejecutada
 
-- [ ] **G14.** Borrar las 3 imágenes que quedan sin ningún uso tras T1-T8:
+- [x] **G14.** Borrar las 3 imágenes que quedan sin ningún uso tras T1-T8:
   - `public/before-after/before-piscina-v2.jpg`
   - `public/before-after/before-cocina.jpg`
   - `public/before-after/before-bano.jpg`

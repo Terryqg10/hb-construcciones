@@ -8,7 +8,6 @@ export const navLinks: readonly NavLink[] = [
   { label: "Cómo Trabajamos", href: "#como-trabajamos" },
   { label: "Galería", href: "#galeria" },
   { label: "Servicios", href: "#servicios" },
-  { label: "Antes y Después", href: "#antes-despues" },
   { label: "Valoraciones", href: "#valoraciones" },
   { label: "Preguntas Frecuentes", href: "#preguntas-frecuentes" },
   { label: "Contacto", href: "#contacto" },

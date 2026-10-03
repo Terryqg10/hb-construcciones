@@ -272,7 +272,7 @@ Causa: `overflow: hidden` en el `body` quitaba la barra de scroll (15 px), la p�
 
 ---
 
-# Parte 4 — Eliminar sección "Antes y Después" (plan pendiente, de otra sesión)
+# Parte 4 — Eliminar sección "Antes y Después" (ejecutada en otra sesión; G14 pendiente)
 
 ## Motivo
 El contenido de la sección (las 3 fotos "antes" y las 3 "después") está generado con IA y no corresponde a obras reales de HB Construcciones. Se retira del sitio por honestidad con el visitante, no por un problema técnico.

@@ -4,7 +4,7 @@ import { Reveal } from "@/components/ui/Reveal";
 
 export function Testimonials() {
   return (
-    <section id="valoraciones" className="bg-gray-50 px-6 py-20">
+    <section id="valoraciones" className="bg-white px-6 py-20">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <h2 className="text-center text-3xl font-bold tracking-tight text-slate-900">

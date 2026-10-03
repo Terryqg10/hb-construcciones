@@ -5,7 +5,6 @@ import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
 import { HowWeWork } from "@/components/sections/HowWeWork";
 import { Gallery } from "@/components/sections/Gallery";
 import { Services } from "@/components/sections/Services";
-import { BeforeAfter } from "@/components/sections/BeforeAfter";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { FAQ } from "@/components/sections/FAQ";
 import { ContactForm } from "@/components/sections/ContactForm";
@@ -22,7 +21,6 @@ export default function Home() {
         <HowWeWork />
         <Gallery />
         <Services />
-        <BeforeAfter />
         <Testimonials />
         <FAQ />
         <ContactForm />

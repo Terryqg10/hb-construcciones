@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { LegalLayout } from "@/components/layout/LegalLayout";
-import { location } from "@/lib/location-data";
-import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Aviso Legal | HB Construcciones",
@@ -11,6 +9,7 @@ export const metadata: Metadata = {
 export default function AvisoLegalPage() {
   return (
     <LegalLayout title="Aviso Legal" updated="3 de octubre de 2026">
+      {/* Oculto hasta tener los datos reales del titular (nombre, NIF y email). Para mostrarlo, descomentar y volver a importar `location` de "@/lib/location-data" y `siteConfig` de "@/lib/site-config".
       <section className="flex flex-col gap-3">
         <h2>1. Datos identificativos del titular</h2>
         <p>
@@ -37,6 +36,7 @@ export default function AvisoLegalPage() {
           </li>
         </ul>
       </section>
+      */}
 
       <section className="flex flex-col gap-3">
         <h2>2. Objeto y ámbito de aplicación</h2>

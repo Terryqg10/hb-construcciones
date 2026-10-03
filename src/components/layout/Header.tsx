@@ -18,12 +18,12 @@ export function Header() {
           onNavigate={() => setIsMenuOpen(false)}
         >
           <Image
-            src="/brand/hb-logo-cliente.webp"
+            src="/brand/hb-logo-cliente.png"
             alt="HB Construcciones"
-            width={748}
-            height={633}
+            width={712}
+            height={597}
             priority
-            className="h-12 w-auto mix-blend-multiply"
+            className="h-12 w-auto"
           />
         </HomeLink>
 

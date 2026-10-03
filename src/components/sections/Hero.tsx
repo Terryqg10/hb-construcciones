@@ -110,7 +110,7 @@ export function Hero() {
 
               <p className="mt-5 max-w-[440px] text-base leading-relaxed text-white/85">
                 Expertos en reformas integrales y construcción de piscinas.
-                Contactanos por WhatsApp y recibí tu presupuesto.
+                Contáctanos por WhatsApp y recibe tu presupuesto.
               </p>
 
               <div className="mt-8 flex gap-3.5">
@@ -160,10 +160,10 @@ export function Hero() {
               Presupuesto Gratis
             </p>
             <p className="mt-1.5 text-[15px] font-semibold leading-snug text-white">
-              Contanos tu proyecto hoy
+              Cuéntanos tu proyecto hoy
             </p>
             <span className="mt-2.5 flex items-center gap-1.5 text-[13px] font-semibold text-white">
-              Escribinos
+              Escríbenos
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </span>
           </a>
@@ -181,7 +181,7 @@ export function Hero() {
 
           <p className="mt-3.5 text-sm leading-relaxed text-slate-500 sm:text-base">
             Expertos en reformas integrales y construcción de piscinas.
-            Contactanos por WhatsApp y recibí tu presupuesto.
+            Contáctanos por WhatsApp y recibe tu presupuesto.
           </p>
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -214,7 +214,7 @@ export function Hero() {
                 Presupuesto Gratis
               </span>
               <span className="mt-0.5 block text-sm font-semibold text-white">
-                Contanos tu proyecto hoy
+                Cuéntanos tu proyecto hoy
               </span>
             </span>
             <ArrowRight className="h-4 w-4 shrink-0 text-white" aria-hidden="true" />

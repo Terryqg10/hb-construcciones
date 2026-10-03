@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "HB Construcciones | Reformas Integrales y Piscinas",
   description:
-    "Expertos en reformas integrales y construcción de piscinas. Contactanos por WhatsApp y recibí tu presupuesto.",
+    "Expertos en reformas integrales y construcción de piscinas. Contáctanos por WhatsApp y recibe tu presupuesto.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

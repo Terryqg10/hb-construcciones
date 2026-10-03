@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
 
 export function Footer() {
@@ -15,6 +16,14 @@ export function Footer() {
       />
       <p className="mt-4 text-xs text-slate-400">
         © {year} {siteConfig.brandName}. Todos los derechos reservados.
+      </p>
+      <p className="mt-3 flex items-center justify-center gap-4 text-xs text-slate-400">
+        <Link href="/aviso-legal" className="transition hover:text-slate-600">
+          Aviso Legal
+        </Link>
+        <Link href="/politica-privacidad" className="transition hover:text-slate-600">
+          Política de Privacidad
+        </Link>
       </p>
       <p className="mt-3 flex items-center justify-center gap-2 text-xs text-slate-400">
         Desarrollado por

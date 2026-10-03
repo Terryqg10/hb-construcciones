@@ -42,3 +42,7 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# frames: vídeos fuente y fotogramas candidatos
+/videos
+/candidatas

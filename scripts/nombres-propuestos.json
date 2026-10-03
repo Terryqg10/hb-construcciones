@@ -1,0 +1,217 @@
+[
+  {
+    "original": "Gemini_Generated_Image_1op9lt1op9lt1op9.jpg",
+    "slug": "cocina-muebles-roble-encimera-negra",
+    "alt": "Cocina con muebles de madera de roble, encimera negra, fregadero de acero y enchufes triples en la pared, con el suelo aún protegido",
+    "status": "ok",
+    "avisos": ["Se ve un taladro de una marca comercial en el suelo."]
+  },
+  {
+    "original": "Gemini_Generated_Image_be5s24be5s24be5s.jpg",
+    "slug": "escalera-gres-marmolado-peldanos",
+    "alt": "Escalera interior revestida con gres marmolado beige y peldaños con tira antideslizante, con una pistola de silicona sobre un escalón",
+    "status": "ok",
+    "avisos": ["Bandas difuminadas arriba y abajo de la imagen (relleno del retoque)."]
+  },
+  {
+    "original": "Gemini_Generated_Image_dj6w8mdj6w8mdj6w.jpg",
+    "slug": "fachada-ladrillo-visto-andamio-terraza",
+    "alt": "Fachada de ladrillo cara vista en tonos cálidos con un andamio azul delante y una terraza de baldosa cerámica en primer plano",
+    "status": "ok",
+    "avisos": ["Vivienda reconocible (no hay número de portal ni matrícula visibles)."]
+  },
+  {
+    "original": "Gemini_Generated_Image_egpn4iegpn4iegpn.jpg",
+    "slug": "fachada-ladrillo-visto-esquina-ventanal",
+    "alt": "Esquina de fachada de ladrillo cara vista junto a un ventanal de aluminio blanco y una ventana con persiana enrollable",
+    "status": "ok",
+    "avisos": ["Reflejos en el cristal (escalera, valla); no se distingue nada personal."]
+  },
+  {
+    "original": "Gemini_Generated_Image_y2sa5uy2sa5uy2sa.jpg",
+    "slug": "acceso-vivienda-pilares-ladrillo-solado",
+    "alt": "Acceso a una vivienda entre dos pilares de ladrillo bicolor, con jardinera de obra, solado nuevo gris y sacos de mortero apilados",
+    "status": "ok",
+    "avisos": ["Urbanización reconocible; cartel pequeño en una ventana (se lee un precio, sin datos personales)."]
+  },
+  {
+    "original": "a_Igual_que_antes,_con (1).png",
+    "slug": "suelo-radiante-tuberias-rojas-mortero",
+    "alt": "Suelo radiante en una habitación, con tuberías rojas sobre panel de tetones, banda perimetral azul y una franja de mortero ya extendida",
+    "status": "ok",
+    "avisos": ["Resolución baja (940 px de ancho): se verá algo blanda."]
+  },
+  {
+    "original": "Gemini_Generated_Image_k2v3rrk2v3rrk2v3.jpg",
+    "slug": "ducha-azulejo-negro-relieve-facetado",
+    "alt": "Pared de ducha revestida con azulejos negros de relieve facetado en plena colocación, con crucetas niveladoras y focos en el techo",
+    "status": "ok",
+    "avisos": ["Zona del foco sobreexpuesta."]
+  },
+  {
+    "original": "Gemini_Generated_Image_t736hft736hft736.jpg",
+    "slug": "pasillo-gres-gris-gran-formato",
+    "alt": "Pasillo de un edificio con suelo de gres gris de gran formato, escoba y fregona preparadas para la limpieza y puertas de emergencia al fondo",
+    "status": "ok",
+    "avisos": ["Aparece una parte de la pierna o el pie del fotógrafo abajo (sin cara)."]
+  },
+  {
+    "original": "Gemini_Generated_Image_jezfl1jezfl1jezf.jpg",
+    "slug": "fachada-ladrillo-rojo-andamio-aislamiento",
+    "alt": "Fachada de ladrillo rojo de una vivienda de dos plantas con andamios y paquetes de aislamiento apilados en los forjados",
+    "status": "ok",
+    "avisos": ["Marcas comerciales de terceros legibles en el material y marcas en una viga; sin personas."]
+  },
+  {
+    "original": "Gemini_Generated_Image_6y51mu6y51mu6y51.jpg",
+    "slug": "escalera-encofrado-hormigon-tablones",
+    "alt": "Encofrado de madera de una escalera de hormigón entre un muro de ladrillo y una pared, con armadura vista y antes del vertido",
+    "status": "ok",
+    "avisos": ["Barras negras arriba y abajo de la imagen (formato apaisado en un lienzo vertical)."]
+  },
+  {
+    "original": "Gemini_Generated_Image_awh1kjawh1kjawh1.jpg",
+    "slug": "piscina-vaso-revestido-nivel-laser",
+    "alt": "Vaso de una piscina con las paredes revestidas de gres imitación piedra y un nivel láser sobre trípode en el fondo",
+    "status": "ok",
+    "avisos": [
+      "PERSONA: un operario de cuerpo parcial en el borde izquierdo; no se le ve la cara.",
+      "Furgoneta blanca al fondo: la matrícula no es visible.",
+      "Vivienda vecina reconocible al fondo."
+    ]
+  },
+  {
+    "original": "Gemini_Generated_Image_h6lprsh6lprsh6lp.jpg",
+    "slug": "ducha-obra-gres-pizarra-colocacion",
+    "alt": "Ducha de obra con paredes de gres imitación pizarra multicolor y suelo en colocación con crucetas niveladoras, con el sumidero a la derecha",
+    "status": "ok",
+    "avisos": [
+      "PERSONA: un operario agachado de espaldas, sin cara visible.",
+      "El chaleco muestra el logotipo y parte del nombre de otra empresa ('BEIK…')."
+    ]
+  },
+  {
+    "original": "Gemini_Generated_Image_gpgc21gpgc21gpgc.jpg",
+    "slug": "fachada-revoco-nuevo-operarios-calle",
+    "alt": "Fachada de un edificio de viviendas con el revoco recién aplicado a pie de calle y dos operarios trabajando junto a una puerta verde",
+    "status": "ok",
+    "avisos": [
+      "PERSONAS: dos operarios; uno de perfil con gorra, parcialmente reconocible.",
+      "Chaleco con logotipo de empresa.",
+      "Calle, portal y grafitis reconocibles."
+    ]
+  },
+  {
+    "original": "Gemini_Generated_Image_udrmswudrmswudrm.jpg",
+    "slug": "fachada-revoco-andamio-torre-calle",
+    "alt": "Fachada de planta baja con revoco aplicado y andamio de torre móvil, ventanas sin carpintería y material de obra sobre la acera",
+    "status": "ok",
+    "avisos": [
+      "Mismo edificio que la foto de los dos operarios.",
+      "Cartel pegado en la puerta con texto legible ('PATASTESA') y calle reconocible."
+    ]
+  },
+  {
+    "original": "Gemini_Generated_Image_cqowhccqowhccqow.jpg",
+    "slug": "muro-revestimiento-piedra-apilada",
+    "alt": "Muro exterior revestido con panel de piedra apilada gris oscuro, con el suelo aún sin pavimentar y un canal de desagüe en la base",
+    "status": "ok",
+    "avisos": ["Papeles de obra con texto parcialmente legible en el suelo."]
+  },
+  {
+    "original": "Gemini_Generated_Image_gz6z0lgz6z0lgz6z.jpg",
+    "slug": "pavimento-losas-piedra-camino",
+    "alt": "Camino de losas rectangulares de aspecto pétreo en gris azulado, con la superficie mojada tras la limpieza",
+    "status": "ok",
+    "avisos": [
+      "Fotograma de vídeo con compresión visible; franja negra en el borde inferior.",
+      "No se ve claro si es piedra natural, hormigón impreso o porcelánico: el alt dice 'aspecto pétreo'."
+    ]
+  },
+  {
+    "original": "Gemini_Generated_Image_bx5vp6bx5vp6bx5v.jpg",
+    "slug": "cocina-fregadero-acero-grifo-agua",
+    "alt": "Grifo de cocina cromado con un chorro de agua cayendo en un fregadero de acero inoxidable sobre encimera negra",
+    "status": "ok",
+    "avisos": ["Se ve parte de una mano (dedo) en el borde derecho; sin cara."]
+  },
+  {
+    "original": "a_Igual_que_antes,_con (2).png",
+    "slug": "suelo-radiante-esquina-mortero",
+    "alt": "Esquina de una habitación con el mortero del suelo radiante extendiéndose sobre el panel de tetones y las tuberías rojas, con banda perimetral azul",
+    "status": "ok",
+    "avisos": []
+  },
+  {
+    "original": "a_Igual_que_antes,_con (3).png",
+    "slug": "solado-porcelanico-gris-patio-nivelantes",
+    "alt": "Solado de porcelánico gris de aspecto pizarra en colocación con crucetas niveladoras, junto a una pared enfoscada y baldosas rojizas existentes",
+    "status": "ok",
+    "avisos": ["Resolución baja (940 px de ancho)."]
+  },
+  {
+    "original": "a_Igual_que_antes,_con.png",
+    "slug": "piscina-vaso-gres-pizarra-sin-rejuntar",
+    "alt": "Vaso de piscina revestido con gres imitación pizarra en suelo y paredes, todavía sin rejuntar, con un contenedor de escombros en el borde",
+    "status": "ok",
+    "avisos": ["Contenedor de escombros con logotipo y texto de una empresa de terceros."]
+  },
+  {
+    "original": "b_Igual_que_antes,_con (1).jpeg",
+    "slug": "piscina-agua-verde-vista-aerea",
+    "alt": "Vista desde arriba de una piscina rectangular de agua verde, con malla verde de obra y otra piscina de agua azul a la derecha, junto a una carretera",
+    "status": "ok",
+    "avisos": [
+      "Parece una foto de 'antes': no muestra una obra terminada. Valora si encaja en 'Antes y Después' y no en la galería.",
+      "Parcela y carretera reconocibles."
+    ]
+  },
+  {
+    "original": "b_Igual_que_antes,_con.jpeg",
+    "slug": "habitacion-suelo-gres-gris-rodapie-blanco",
+    "alt": "Habitación con suelo de gres porcelánico gris de gran formato, rodapié blanco y una ventana con marco oscuro",
+    "status": "ok",
+    "avisos": ["Resolución muy baja (576 px de ancho): se verá pequeña y pixelada."]
+  },
+  {
+    "original": "b_Igual_que_antes,_con.png",
+    "slug": "pared-azulejo-metro-blanco-biselado",
+    "alt": "Pared con azulejo blanco biselado tipo metro colocado a medias sobre el enfoscado, con un cubo de obra en primer plano",
+    "status": "ok",
+    "avisos": []
+  },
+  {
+    "original": "gpt-image-2 (medium)_b_Eres_un_retocador_fo.png",
+    "slug": "ducha-pared-listel-gris-llaves",
+    "alt": "Rincón de ducha con paredes de gres tipo listel en tonos grises y las llaves de la grifería protegidas con tapones rojo y azul",
+    "status": "ok",
+    "avisos": ["Resolución algo baja (935 px de ancho) y franjas negras finas arriba y abajo."]
+  },
+  {
+    "original": "a_Igual_que_antes,_con.webp",
+    "slug": "solado-gran-formato-nivelantes-carton",
+    "alt": "Suelo de gres de gran formato en colocación con crucetas niveladoras y un cartón protegiendo parte de las piezas, con herramientas al fondo",
+    "status": "ok",
+    "avisos": ["Imagen borrosa y desenfocada; recomiendo descartarla o dejarla al final."]
+  },
+  {
+    "original": "b_Igual_que_antes,_con (1).png",
+    "slug": "solado-pizarra-oscura-nivelantes-amarillos",
+    "alt": "Suelo de gres oscuro tipo pizarra en colocación con crucetas niveladoras amarillas",
+    "status": "dudosa",
+    "avisos": [
+      "No se aprecia si es el fondo de una piscina, una terraza o una estancia interior.",
+      "Fotograma de vídeo borroso con barras negras finas arriba y abajo."
+    ]
+  },
+  {
+    "original": "a_Igual_que_antes,_con (4).png",
+    "slug": "revestimiento-acanalado-hueco-pladur",
+    "alt": "Revestimiento acanalado blanco con un hueco abierto en el que se ve pladur verde sin acabar",
+    "status": "dudosa",
+    "avisos": [
+      "No está claro qué es (mueble, columna o falso techo) ni qué trabajo se hizo.",
+      "Fotograma de vídeo de baja resolución (768 px de ancho)."
+    ]
+  }
+]

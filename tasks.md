@@ -40,7 +40,40 @@
 - [ ] V14b. Unificar a "vídeo" (con tilde, forma RAE) toda la web. Hoy solo aparece "video" en `VideoDemo.tsx` (se elimina en V14), así que no queda nada más por cambiar; se comprobará con grep.
 
 ### QA
-- [ ] V15. `tsc --noEmit`, `eslint`, búsqueda de `any`/`@ts-ignore`, auditoría de `href`/`onClick`.
-- [ ] V16. Navegador a 375 px y escritorio con 1, 3 y 5 clips (capturas).
-- [ ] V17. Pestaña de red: cero peticiones a `.mp4` hasta pulsar play; un solo vídeo a la vez; teclado (Tab/Enter/Espacio) y foco visible.
+- [x] V15. `tsc --noEmit`, `eslint`, búsqueda de `any`/`@ts-ignore`, auditoría de `href`/`onClick`.
+- [x] V16. Navegador a 375 px y escritorio con 1, 3 y 5 clips (capturas).
+- [x] V17. Pestaña de red: cero peticiones a `.mp4` hasta pulsar play; un solo vídeo a la vez; teclado (Tab/Enter/Espacio) y foco visible.
 - [ ] V18. Revisión final y limpieza (referencias a `demo.mp4`, `public/videos` completo).
+
+
+## Parte 3 — Galería con fotos reales (cada tarea espera tu visto bueno antes de pasar a la siguiente)
+
+### Decisiones previas
+- [x] G0. Validar `spec.md` Parte 3: origen de las fotos (¿IA o reales?), `sharp` transitivo vs `ffmpeg`, opción de visualización (A/B), ubicación `src/lib/galeria-data.ts`.
+
+### Fase 1 — Propuesta de nombres (solo lectura)
+- [x] G1. Añadir `/fotos-seleccionadas` a `.gitignore`.
+- [x] G2. Revisar las 27 fotos y generar `scripts/nombres-propuestos.json` (slug, alt, status, avisos) y la tabla original → nombre → alt. Señalar caras, matrículas o datos de vivienda.
+- [x] G3. Tu aprobación (o correcciones) de la propuesta; las `dudosa` se resuelven o se descartan.
+
+### Fase 2 — Script `npm run galeria`
+- [x] G4. Añadir `"galeria": "node scripts/process-gallery.mts"` a `package.json`.
+- [x] G5. Crear `process-gallery.mts` con tipos, constantes (rutas, 1600, calidad 80, 300 KB) y lectura/validación del JSON.
+- [x] G6. Lógica pura: asignación de slugs con sufijos `-2`, `-3` y `renderGalleryModule` (genera el `.ts`).
+- [x] G7. `processPhoto` con sharp (rotate, resize sin ampliar, WebP 80, sin metadatos), `.tmp.webp` + renombrado, idempotencia.
+- [x] G8. `main`: bucle secuencial, regeneración de `src/lib/galeria-data.ts`, resumen, avisos > 300 KB, código de salida.
+- [x] G9. Verificación: `tsc --noEmit`, búsqueda de `any`/`@ts-ignore`, ejecución real, segunda ejecución (todo saltado), originales intactos (hash), prueba con un original corrupto.
+
+### Web
+- [x] G10. Listar referencias a `gallery-0X.jpg` y `before-after/*` y confirmar contigo qué dejaría de usarse (sin borrar).
+- [x] G11. `GalleryGrid.tsx` (Client): mosaico, `next/image` con `width/height` y `sizes`, "Ver más" (y lightbox si eliges B).
+- [x] G12. Integrar en `Gallery.tsx` y retirar `gallery-data.ts` (sin tocar "Antes y Después" ni `VideoDemo`).
+- [x] G13. QA: `tsc`, `eslint`, `any`/`@ts-ignore`, auditoría de `href`/`onClick` y botón de cierre si hay lightbox, navegador 375 px y escritorio, pestaña de red (solo se piden las fotos visibles).
+- [x] G14. Con tu confirmación explícita, borrado de las imágenes antiguas que queden sin uso y limpieza de los `generate-*.mjs` obsoletos.
+
+### Ampliación — Lightbox
+- [x] L1. `GalleryLightbox.tsx`: visor con animación, flechas, contador, cierre (X/Esc/fondo), teclado y táctil.
+- [x] L2. Foco atrapado, retorno del foco a la miniatura, bloqueo de scroll, `prefers-reduced-motion`.
+- [x] L3. `GalleryGrid.tsx`: miniaturas como botones y `activeIndex`.
+- [x] L4. QA: `tsc`/`eslint`, sin `any`, navegador 375 px y escritorio, pestaña de red (solo se pide la foto abierta, en WebP).
+- [x] L5. Corregir el salto de la landing al abrir/cerrar el visor (`scrollbar-gutter: stable` + `preventScroll`).

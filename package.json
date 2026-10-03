@@ -8,7 +8,8 @@
     "start": "next start --port 3001",
     "lint": "eslint",
     "frames": "node scripts/extract-frames.mts",
-    "videos": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/process-videos.mts"
+    "videos": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/process-videos.mts",
+    "galeria": "node scripts/process-gallery.mts"
   },
   "dependencies": {
     "framer-motion": "^13.4.1",
@@ -24,6 +25,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
+    "sharp": "0.35.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

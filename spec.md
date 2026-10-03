@@ -150,3 +150,121 @@ Por qué solo `VideoCard` es Client: es lo único que necesita estado (`playing`
 
 ## Fuera de alcance
 Audio/subtítulos, analíticas de reproducción, lightbox/modal, reproducción automática al entrar en pantalla.
+
+
+---
+
+# Parte 3 — Galería con fotos reales de obras
+
+## Propósito
+Sustituir las 6 imágenes genéricas de la galería (`gallery-01…06.jpg`) por las 27 fotos ya editadas de `/fotos-seleccionadas`, con nombres descriptivos, texto alternativo útil e imágenes optimizadas. Se hace en tres fases, cada una con aprobación previa.
+
+## Hallazgos previos
+- **Origen de las fotos:** los nombres de archivo (`Gemini_Generated_Image_*.jpg`, `a_Igual_que_antes,_con*.png`, `gpt-image-2 (medium)_b_Eres_un_retocador_fo.png`) indican que varias son **generadas o retocadas con IA**, no fotos directas de obra. Antes de publicarlas como "Nuestros Trabajos" hay que confirmar que representan trabajos reales del cliente (riesgo de publicidad engañosa y de confianza). Se decide en la validación.
+- **Carpeta de entrada:** 27 archivos (16 `.jpg`, 10 `.png`, 1 `.webp`). Aún **no** está en `.gitignore`.
+- **sharp:** no está en `package.json`, pero `sharp@0.35.4` está instalado como dependencia transitiva de Next 16 (es lo que usa `next/image`). Se puede importar sin añadir nada, aunque queda como dependencia implícita. Alternativa: `ffmpeg`, que ya exigen los otros scripts.
+- **Galería actual:** `src/lib/gallery-data.ts` (`GalleryItem { src, alt, span }`) + `src/components/sections/Gallery.tsx` (Server, cuadrícula de 6 con `span` tall/wide, `sizes` fijo) + `VideoDemo` dentro de la misma sección.
+- **`images.qualities` = `[75, 90]`** en `next.config.ts`: no hay que tocarlo.
+
+## Referencias a imágenes antiguas (estado actual, antes de cambiar nada)
+| Archivo | Referenciado desde | ¿Dejará de usarse tras la Parte 3? |
+|---|---|---|
+| `gallery/gallery-01.jpg` | `before-after-data.ts` (después piscina), `video-data.ts` (poster), `generate-before-images.mjs`, `generate-gallery-images.mjs` | **No** (Antes/Después). El poster desaparece si se completa la Parte 2 (V10). |
+| `gallery/gallery-02.jpg`, `-03.jpg` | `before-after-data.ts`, `generate-before-images.mjs`, `generate-gallery-images.mjs` | **No** (Antes/Después) |
+| `gallery/gallery-04.jpg`, `-05.jpg`, `-06.jpg` | solo `gallery-data.ts` y `generate-gallery-images.mjs` | **Sí → candidatas a borrar** (requiere tu confirmación) |
+| `before-after/before-*.jpg` (3) | `before-after-data.ts`, `generate-before-images.mjs` | **No**, no se tocan |
+
+Se volverá a listar con `grep` en la tarea G10 antes de proponer ningún borrado. **No se borra nada sin tu confirmación.**
+
+## 3.A Fase 1 — Propuesta de nombres (sin modificar archivos)
+- Se abre cada foto y se propone: `slug` (minúsculas, guiones, sin tildes ni espacios; tipo de obra + detalle distintivo, p. ej. `piscina-deck-madera-terminada`) y `alt` (español de España, descriptivo, sin relleno ni "imagen de").
+- `status`: `"ok"` o `"dudosa"` (si no está claro qué muestra, no se inventa). Campo `avisos`: caras, matrículas, números de portal, datos de vivienda o texto legible. Sin nombres de personas ni direcciones.
+- Salida: `scripts/nombres-propuestos.json` y tabla en el chat (original → slug → alt). **Espera tu aprobación.** Los originales no se tocan.
+
+```ts
+interface PhotoProposal {
+  readonly original: string;          // nombre del archivo en /fotos-seleccionadas
+  readonly slug: string;              // sin extensión
+  readonly alt: string;
+  readonly status: "ok" | "dudosa";
+  readonly avisos: readonly string[]; // [] si no hay nada que avisar
+}
+```
+
+## 3.B Fase 2 — Script `npm run galeria` → `scripts/process-gallery.mts`
+Solo se escribe tras aprobar la propuesta.
+
+### Entrada / salida
+| | Ruta (raíz) | Notas |
+|---|---|---|
+| Entrada | `scripts/nombres-propuestos.json` + `/fotos-seleccionadas/*` (`.jpg/.jpeg/.png/.webp`) | Solo lectura. Nunca se modifica ni borra un original. |
+| Salida imágenes | `/public/gallery/<slug>.webp` | Se versionan (las sirve la web). No chocan con `gallery-0X.jpg`. |
+| Salida datos | `/src/lib/galeria-data.ts` | Generado, con cabecera "no editar a mano". Sigue la convención `src/lib/*-data.ts` en lugar de `src/data`. |
+
+### Reglas
+1. **Procesado:** `sharp(origen).rotate()` (aplica orientación EXIF) → `resize({ width: 1600, height: 1600, fit: "inside", withoutEnlargement: true })` → `webp({ quality: 80 })`. No se llama a `withMetadata`, así que se eliminan EXIF/ICC/XMP.
+2. **Nombres:** se usa el `slug` de la propuesta. Si dos coinciden, tras ordenar por nombre de archivo original (`localeCompare`), el primero conserva el slug y los siguientes reciben `-2`, `-3`…
+3. **Validación del JSON:** slug con `^[a-z0-9]+(-[a-z0-9]+)*$`, `alt` no vacío, el original existe. Las entradas `"dudosa"` se saltan con aviso hasta que las pases a `"ok"`. Las fotos de la carpeta ausentes del JSON se avisan, no se procesan.
+4. **Idempotencia:** si `<slug>.webp` existe y es más reciente que el original, se salta. Se escribe a `.tmp.webp` y se renombra; si falla, se borra el temporal. `galeria-data.ts` se regenera siempre a partir del JSON y de las dimensiones reales de cada `.webp` (`sharp().metadata()`), en el orden del JSON.
+5. **Tolerancia a fallos:** `try/catch` por foto; el proceso continúa.
+6. **Resumen final:** procesadas / saltadas / fallidas (con motivo), entradas dudosas, **aviso por cada salida > 300 KB** (también las saltadas). Código de salida 1 si hay fallidas.
+7. **Tipos y salida generada:**
+```ts
+export interface GalleryPhoto {
+  readonly src: string;    // "/gallery/<slug>.webp"
+  readonly alt: string;
+  readonly width: number;
+  readonly height: number;
+}
+export const galleryPhotos: readonly GalleryPhoto[] = [ /* … */ ];
+```
+8. **.gitignore:** añadir `/fotos-seleccionadas`. Cero `any`/`@ts-ignore`; sin dependencias nuevas en `package.json`.
+
+## 3.C Web
+| Archivo | Tipo | Responsabilidad |
+|---|---|---|
+| `src/lib/galeria-data.ts` | generado | Lista tipada `galleryPhotos`. |
+| `src/lib/gallery-data.ts` | — | Se elimina al migrar (`GalleryItem` con `span` ya no se usa). |
+| `src/components/sections/Gallery.tsx` | Server | Título + `<GalleryGrid photos={…} />` + bloque de vídeo existente. |
+| `src/components/ui/GalleryGrid.tsx` | **Client** (único) | Estado de "ver más" (y de lightbox si se aprueba). |
+
+Por qué Client solo la rejilla: "ver más" y el lightbox necesitan estado y eventos; el título y los textos siguen en servidor.
+
+### Propuesta de visualización (a aprobar)
+- **Recomendada: Opción A — mosaico con "Ver más".** CSS `columns-2 sm:columns-3` con la proporción real de cada foto (`width`/`height` evitan saltos de maquetación y recortes), `rounded-xl`, `gap-3`. Se muestran **9** fotos y un botón `rounded-full` "Ver más trabajos" revela las 18 restantes (el botón desaparece al mostrar todas). Las ocultas **no se montan**, así que no se descargan.
+- **Opción B — A + lightbox** con `<dialog>` nativo (sin dependencias): clic abre la foto grande, botón de cierre visible, Esc, flechas anterior/siguiente, foco devuelto a la miniatura. Más código y más superficie de QA; permite ver la obra al detalle.
+- **Opción C — solo carrusel/lightbox** sin rejilla: descartada (peor en móvil y para SEO).
+- `next/image`: `width`/`height` de los datos, `sizes="(min-width: 1152px) 376px, (min-width: 640px) 33vw, 50vw"` (contenedor `max-w-6xl` ÷ 3 columnas; 2 en móvil), `alt` de la propuesta.
+- Si se elige B, `sizes` del lightbox: `(min-width: 1024px) 896px, 100vw`.
+
+## Fuera de alcance
+"Antes y Después" (no se toca), borrado de imágenes antiguas (solo con tu confirmación), vídeos (Parte 2), nuevas dependencias.
+
+## Criterios de aceptación
+- `npm run galeria` crea 27 `.webp` ≤ 1600 px (sin ampliar), sin metadatos y con orientación correcta; segunda ejecución: todo saltado; originales intactos (comparar hash).
+- `galeria-data.ts` tipado, sin `any`; `tsc --noEmit` y `eslint` limpios.
+- La web muestra la lista nueva con los `alt` correctos; sin descargar las fotos ocultas hasta pulsar "Ver más" (pestaña de red); móvil 375 px y escritorio revisados.
+- "Antes y Después" idéntico al actual.
+
+
+## 3.D Ampliación — Lightbox sobre el mosaico (petición posterior, opción B)
+
+### Comportamiento
+- Cada miniatura pasa a ser un `<button>` (`aria-label="Ampliar foto: {alt}"`). Al pulsarla se abre un visor a pantalla completa con fondo oscuro y la foto ampliada.
+- **Animación ligera** (framer-motion, ya instalado): fondo con fundido, foto con `scale 0.94 → 1` y opacidad; al cambiar de foto, deslizamiento horizontal corto (±40 px) según la dirección. Con `prefers-reduced-motion` no hay movimiento.
+- **Navegación:** flechas anterior/siguiente (botones `rounded-full`), teclas ←/→, deslizamiento táctil en móvil. Recorre las 25 fotos en bucle, incluidas las aún no desplegadas en el mosaico. Contador "n / total".
+- **Cierre (siempre visible):** botón X, tecla Esc y clic en el fondo.
+- **Accesibilidad:** `role="dialog"`, `aria-modal`, `aria-label`; el foco entra en el botón de cerrar, se queda atrapado (Tab/Shift+Tab) y vuelve a la miniatura al cerrar; el scroll de la página se bloquea mientras está abierto.
+
+### Peso / formato
+- Origen: los mismos WebP de `/public/gallery` (calidad 80, ≤ 1600 px). `next/image` los sirve en WebP con calidad 75, sin formatos nuevos.
+- `sizes` del visor: `(min-width: 1024px) 50vw, 100vw`. Solo se descarga la foto abierta; las vecinas no se precargan, para no gastar datos.
+
+### Archivos
+| Archivo | Cambio |
+|---|---|
+| `src/components/ui/GalleryLightbox.tsx` | **Nuevo** (Client): visor, animación, navegación, foco y teclado. |
+| `src/components/ui/GalleryGrid.tsx` | Miniaturas como botones; estado `activeIndex`; monta el visor. |
+
+### Corrección: salto de la página al abrir el visor
+Causa: `overflow: hidden` en el `body` quitaba la barra de scroll (15 px), la página se ensanchaba y todo se recolocaba. Solución: `html { scrollbar-gutter: stable }` en `globals.css` y `focus({ preventScroll: true })` en las dos llamadas a `focus()` del visor.

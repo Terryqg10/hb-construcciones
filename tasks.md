@@ -128,7 +128,7 @@ Se construye en `skill-draft/media-pipeline/` (en `.gitignore`). **Nada se copia
 - [x] S5. `scripts/process-videos.mts` generalizado (recorte de barras negras, portada configurable vía `videos.posters`, `--only`).
 - [x] S6. `scripts/check-images.mts` (reglas 1–7 del diseño; solo lectura; código de salida 1 si hay errores).
 - [x] S7. Prueba en un proyecto temporal fuera del repo: los cuatro scripts con solo la config, segunda ejecución (todo saltado), archivo corrupto, originales intactos (hash), `check-images` detecta los casos forzados, `tsc` estricto, búsqueda de `any`/`@ts-ignore` y de textos específicos de HB.
-- [ ] S8. `templates/` (config, ejemplo de propuesta, plantillas de spec y tasks "galería y vídeos") y `checklist.md`.
+- [x] S8. `templates/` (config, ejemplo de propuesta, plantillas de spec y tasks "galería y vídeos") y `checklist.md`.
 - [ ] S9. `SKILL.md` (< 500 líneas): descripción para carga automática, inspección inicial con aprobación, flujo, reglas, adaptación de rutas.
 - [ ] S10. Revisión conjunta del borrador completo y, **solo con tu aprobación explícita**, copia a `~/.claude/skills/media-pipeline/`.
 - [ ] S11. Verificación final: frontmatter válido, `SKILL.md` < 500 líneas, la skill aparece en una sesión nueva, HB intacto; borrar `skill-draft/` y su entrada de `.gitignore` con tu confirmación; commit de `spec.md` y `tasks.md`.

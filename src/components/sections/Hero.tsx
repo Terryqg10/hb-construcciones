@@ -57,7 +57,7 @@ export function Hero() {
             className="object-cover"
             style={{ objectPosition: "62% 30%" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/15 to-transparent lg:bg-gradient-to-r lg:from-slate-950/90 lg:via-slate-950/55 lg:to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/15 to-transparent lg:bg-gradient-to-r lg:from-slate-950/80 lg:via-slate-950/45 lg:to-transparent" />
 
           {/* Rating: chip compacto en mobile, tarjeta completa en desktop */}
           <div className="absolute bottom-4 left-4 flex items-center gap-1.5 rounded-full bg-white px-3.5 py-2 shadow-lg lg:hidden">

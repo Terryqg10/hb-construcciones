@@ -114,3 +114,21 @@ Ver `spec.md` para el detalle de cada punto. Ninguna de estas tareas está ejecu
 - [x] C4. Integrar en `VideoGallery.tsx` (sigue Server): envolver la lista, añadir el texto guía solo móvil.
 - [x] C5. QA: `tsc`, `eslint`, `any`/`@ts-ignore`, auditoría de `onClick`, navegador a 375 px con 1, 3 y 5 clips, comprobar que el play sigue libre, escritorio sin cambios, `next build`.
 - [x] C6. Commit.
+
+
+## Parte 6 — Skill personal `media-pipeline` (cada tarea espera tu visto bueno antes de pasar a la siguiente)
+
+Se construye en `skill-draft/media-pipeline/` (en `.gitignore`). **Nada se copia a `~/.claude` hasta S10.**
+
+- [x] S0. Validar `spec.md` Parte 6: estructura de archivos y decisiones D1–D8 (scripts copiados al proyecto, config JSON, `sharp` explícito, diseño de `check-images`).
+- [x] S1. Crear `skill-draft/media-pipeline/` con el esqueleto de carpetas, añadir `/skill-draft` a `.gitignore` y escribir `scripts/lib/config.mts` (tipos `MediaConfig`, carga y validación, mensajes de error claros).
+- [x] S2. `scripts/lib/slug.mts` (copia de HB, sin cambios) y `scripts/lib/run.mts` (`execFile` promisificado, comprobación de ffmpeg/ffprobe con ayuda de instalación por sistema operativo).
+- [x] S3. `scripts/extract-frames.mts` generalizado (rutas, posiciones, tamaño y calidad desde la config) con hoja de contactos.
+- [x] S4. `scripts/process-gallery.mts` generalizado (módulo de datos opcional y con nombre configurable).
+- [x] S5. `scripts/process-videos.mts` generalizado (recorte de barras negras, portada configurable vía `videos.posters`, `--only`).
+- [x] S6. `scripts/check-images.mts` (reglas 1–7 del diseño; solo lectura; código de salida 1 si hay errores).
+- [x] S7. Prueba en un proyecto temporal fuera del repo: los cuatro scripts con solo la config, segunda ejecución (todo saltado), archivo corrupto, originales intactos (hash), `check-images` detecta los casos forzados, `tsc` estricto, búsqueda de `any`/`@ts-ignore` y de textos específicos de HB.
+- [ ] S8. `templates/` (config, ejemplo de propuesta, plantillas de spec y tasks "galería y vídeos") y `checklist.md`.
+- [ ] S9. `SKILL.md` (< 500 líneas): descripción para carga automática, inspección inicial con aprobación, flujo, reglas, adaptación de rutas.
+- [ ] S10. Revisión conjunta del borrador completo y, **solo con tu aprobación explícita**, copia a `~/.claude/skills/media-pipeline/`.
+- [ ] S11. Verificación final: frontmatter válido, `SKILL.md` < 500 líneas, la skill aparece en una sesión nueva, HB intacto; borrar `skill-draft/` y su entrada de `.gitignore` con tu confirmación; commit de `spec.md` y `tasks.md`.

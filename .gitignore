@@ -53,3 +53,6 @@ next-env.d.ts
 
 # previsualizaciones temporales de vídeos
 /tmp-previews
+
+# skill personal en construcción (se copia a ~/.claude/skills al aprobarse)
+/skill-draft

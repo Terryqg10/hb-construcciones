@@ -379,3 +379,135 @@ Que cualquier visitante entienda sin ayuda que hay más vídeos y sepa cómo ver
 Autoplay del carrusel, bucle infinito, gestos personalizados, cambios en escritorio.
 
 
+---
+
+# Parte 6 — Skill personal `media-pipeline` (flujo de medios reutilizable)
+
+## Propósito
+Convertir el flujo de las Partes 1–3 (fotogramas → selección → WebP/vídeos → galería) en una skill personal que se cargue sola en cualquier proyecto con galería de fotos y vídeos, sin rutas ni textos de HB. Al activarse en un proyecto nuevo, **primero inspecciona su estructura y propone dónde irán scripts y datos**; no asume la de HB.
+
+## Hallazgos sobre el estado actual
+- **Ya existen en HB:** `extract-frames.mts` (`npm run frames`), `process-videos.mts` (`npm run videos`), `process-gallery.mts` (`npm run galeria`) y `scripts/lib/slug.mts`.
+- **`check:images` no existe** en el proyecto (ni en `package.json` ni en ningún archivo). Hay que **diseñarlo desde cero**; no es una generalización.
+- **Acoplamientos a HB que hay que quitar:** rutas fijas (`fotos-seleccionadas`, `videos-seleccionados`, `public/gallery`, `public/videos`, `candidatas`), el import de `src/lib/video-clips.ts` en `process-videos.mts` (portada configurable), la generación de `src/lib/galeria-data.ts` con nombre y tipo fijos, y el mensaje de instalación de ffmpeg solo para Windows (`winget`).
+- **`sharp` y la resolución de módulos:** un script ESM resuelve `import "sharp"` desde **su propia ubicación**. Un script que viviera en `~/.claude/skills/...` no encontraría el `sharp` del proyecto. Por eso los scripts **se copian al proyecto** al activar la skill (y quedan versionados con él).
+- **`sharp` es hoy una dependencia transitiva de Next** (`package.json` ya lo lista como devDependency en este momento, pero otro proyecto puede no tenerlo). La skill lo comprueba y, si falta, **pide permiso** antes de ejecutar `npm i -D sharp`.
+- **No se incluyen** `generate-before-images.mjs` ni `generate-hero-image.mjs` (generan imágenes con IA): contradicen la regla "fotos reales sin imágenes generadas".
+- **`~/.claude/skills/` ya existe** y contiene `synced`. No se toca.
+- **Node:** el entorno tiene v24 (type stripping nativo de `.mts`). La skill comprueba `node -v` (≥ 22.18) antes de copiar nada.
+
+## Estructura de archivos propuesta
+Destino final (solo tras tu aprobación en S10):
+```
+~/.claude/skills/media-pipeline/
+├── SKILL.md                         # < 500 líneas: cuándo, flujo, reglas, adaptación
+├── checklist.md                     # revisión previa a commit (calidad, legal, QA)
+├── scripts/
+│   ├── extract-frames.mts           # fotogramas → candidatas + hoja de contactos
+│   ├── process-gallery.mts          # fotos aprobadas → WebP (sharp) + módulo de datos opcional
+│   ├── process-videos.mts           # clips → mp4 ligero + portada, recorte de barras negras
+│   ├── check-images.mts             # NUEVO: auditoría de imágenes publicadas
+│   └── lib/
+│       ├── config.mts               # carga y valida media-pipeline.config.json (tipado, sin any)
+│       ├── slug.mts                 # slugify + asignación anti-colisión (de HB, sin cambios)
+│       └── run.mts                  # execFile + comprobación de ffmpeg/ffprobe por sistema operativo
+└── templates/
+    ├── media-pipeline.config.json   # configuración de rutas y límites, con valores por defecto
+    ├── nombres-propuestos.example.json
+    ├── spec-galeria-videos.md       # plantilla "Parte de galería y vídeos" para spec.md
+    └── tasks-galeria-videos.md      # plantilla equivalente para tasks.md
+```
+Mientras se construye, todo vive en `skill-draft/media-pipeline/` (raíz de HB, **en `.gitignore`**). No se escribe nada en `~/.claude` hasta S10.
+
+En el proyecto destino la skill dejará (tras aprobación): `scripts/media/*.mts`, `media-pipeline.config.json` en la raíz, y scripts de `package.json` (`frames`, `galeria`, `videos`, `check:images`).
+
+## Decisiones a validar
+| # | Decisión | Propuesta | Por qué |
+|---|---|---|---|
+| D1 | Dónde corren los scripts | **Copiados al proyecto**, no ejecutados desde `~/.claude` | Resolución de `sharp`; versionados con el proyecto |
+| D2 | Cómo se adaptan las rutas | `media-pipeline.config.json` en la raíz del proyecto, propuesto tras inspeccionar | Cero rutas fijas en los scripts |
+| D3 | Datos de la galería | `gallery.dataFile` configurable (`null` = no generar); nombre del export configurable | HB usa `src/lib/galeria-data.ts`; otro proyecto puede usar JSON o nada |
+| D4 | Portada configurable | Mapa `videos.posters` (`slug → segundos`) en la config + `posterDefaultAt` (0.3) | Sustituye el import TS de HB |
+| D5 | `sharp` | Dependencia explícita; la skill pide permiso para instalarla si falta | No depender de un transitivo |
+| D6 | `check:images` | Auditoría de las carpetas de salida (reglas abajo) | No existe; se define aquí |
+| D7 | Idioma | `SKILL.md`, mensajes de consola y plantillas en **español de España** | Regla del proyecto |
+| D8 | Instalación de ffmpeg | Aviso según sistema (`winget` / `brew` / `apt`) | HB solo lo daba para Windows |
+
+## Contrato de configuración (`media-pipeline.config.json`)
+```ts
+interface MediaConfig {
+  readonly paths: {
+    readonly videosIn: string;        // vídeos brutos (para frames)
+    readonly candidates: string;      // salida de frames + index.html (fuera de public)
+    readonly photosIn: string;        // fotos aprobadas (solo lectura)
+    readonly videosSelected: string;  // clips elegidos
+    readonly galleryOut: string;      // WebP finales de la galería
+    readonly videosOut: string;       // mp4 + portadas
+    readonly proposal: string;        // JSON de nombres propuestos
+    readonly publicDir?: string;      // raíz pública que sirve el sitio ("public", "static"...); por defecto "public"
+  };
+  readonly gallery: {
+    readonly dataFile: string | null; // módulo de datos generado, o null
+    readonly exportName: string;      // p. ej. "galleryPhotos"
+    readonly publicPrefix: string;    // p. ej. "/gallery"
+  };
+  readonly limits: {
+    readonly maxSidePx: number;       // 1600
+    readonly webpQuality: number;     // 80
+    readonly warnPhotoBytes: number;  // 300 KB
+    readonly maxVideoWidthPx: number; // 720
+    readonly videoCrf: number;        // 28
+    readonly warnVideoBytes: number;  // 4 MB
+  };
+  readonly frames: { readonly positions: readonly number[] }; // [0.2, 0.4, 0.6, 0.8]
+  readonly videos: {
+    readonly posterDefaultAt: number;                  // 0.3
+    readonly posters: Readonly<Record<string, number>>; // slug → segundo
+  };
+}
+```
+Validación al cargar: rutas dentro de la raíz del proyecto, las carpetas de entrada y `candidates` **fuera** de `paths.publicDir` (y sin solaparse con `galleryOut`/`videosOut`), números finitos > 0, posiciones en (0, 1). Un error de configuración detiene el script con un mensaje claro antes de tocar nada.
+
+## Cambios por script respecto a HB
+| Script | Entrada → salida | Cambios |
+|---|---|---|
+| `extract-frames` | `paths.videosIn` → `paths.candidates` | Rutas, posiciones, tamaño y calidad desde la config; ayuda de instalación por sistema |
+| `process-gallery` | `paths.photosIn` + `paths.proposal` → `paths.galleryOut` (+ `gallery.dataFile`) | Rutas y límites desde la config; el módulo de datos es opcional y con nombre configurable; sin referencias a HB |
+| `process-videos` | `paths.videosSelected` → `paths.videosOut` | Portada al segundo de `videos.posters[slug]` o al `posterDefaultAt`; ya no importa código del proyecto; admite `--only=<slug>` |
+| `check-images` | `paths.galleryOut`, `paths.videosOut` (solo lectura) | **Nuevo** |
+
+Se conserva el comportamiento ya verificado: idempotencia, escritura `.tmp` + renombrado, `try/catch` por elemento, resumen final y código de salida 1 si hay fallos. Se conserva la regla de **nunca modificar ni borrar un original**.
+
+## `check-images` (diseño nuevo)
+Recorre `paths.galleryOut` y las portadas de `paths.videosOut` y avisa o falla según la regla:
+1. **Error:** formato distinto de WebP en `galleryOut` (jpg, png, gif…).
+2. **Error:** lado mayor > `maxSidePx`.
+3. **Aviso:** peso > `warnPhotoBytes`.
+4. **Aviso:** presencia de EXIF/ICC/XMP (se esperan eliminados).
+5. **Error:** una entrada de `gallery.dataFile` (si existe) apunta a un archivo que no existe, o hay un WebP sin entrada en los datos.
+6. **Error:** `candidates`, `photosIn`, `videosIn` o `videosSelected` dentro (o alrededor) de `paths.publicDir` (se publicarían por accidente).
+7. **Aviso:** nombres de archivo que sugieran imagen generada (`generated`, `gemini`, `dall-e`, `midjourney`, `gpt-image`, `stable-diffusion`).
+Salida: tabla resumen; código de salida 1 si hay algún error. **Solo lectura.**
+
+## `SKILL.md`
+- **Frontmatter:** `name: media-pipeline`; `description` clara y con palabras clave (galería de fotos, fotogramas de vídeo, WebP, optimizar imágenes, recorte de barras negras, portada de vídeo, `check:images`) para que se cargue sola.
+- **Secciones:** cuándo usarla · primer paso en un proyecto nuevo (inspección y propuesta, con aprobación) · flujo paso a paso (**copia de seguridad → propuesta de nombres con aprobación → proceso → revisión → commit**) · reglas · cómo adaptar rutas · comandos · qué hacer si algo falla.
+- **Reglas:** WebP obligatorio · nunca borrar originales · fotos reales, sin imágenes generadas (si los nombres sugieren IA, parar y preguntar) · español de España · nada se copia a `public/` sin aprobación · sin `any` ni `@ts-ignore`.
+- **Límite:** < 500 líneas; el detalle largo va a `checklist.md` y `templates/`.
+
+## Plantillas (`templates/spec-galeria-videos.md` y `tasks-galeria-videos.md`)
+"Parte de galería y vídeos" con huecos `{{...}}` para ruta, nombre del proyecto y decisiones, y las fases: inspección → propuesta de nombres → scripts → integración web → QA. Las tareas son atómicas y esperan visto bueno entre ellas.
+
+## Proceso de construcción
+Tareas S0–S11 de `tasks.md`, **una a una, con tu visto bueno entre ellas**. El código se escribe primero en `skill-draft/media-pipeline/` y se prueba allí; la copia a `~/.claude/skills/media-pipeline/` es la tarea S10 y solo se hace con tu aprobación explícita.
+
+## Criterios de aceptación
+- `grep` de `hb`, `HB`, `galeria-data`, `video-clips`, `public/gallery` y `public/videos` en `scripts/` y `templates/` de la skill: **0 coincidencias** (salvo ejemplos marcados como tales).
+- `tsc --noEmit` en modo estricto sobre los scripts de la skill: sin errores; **cero `any` y cero `@ts-ignore`**.
+- Prueba en un proyecto temporal (fuera del repo): los cuatro scripts funcionan solo con la config; segunda ejecución → todo saltado; un archivo corrupto no detiene el resto; los originales no cambian (hash).
+- `check-images` detecta a propósito un `.jpg` en la salida, una imagen > 1600 px y una entrada de datos huérfana.
+- `SKILL.md` < 500 líneas, frontmatter válido; la skill aparece listada en una sesión nueva.
+- HB no cambia: `npm run frames`, `videos` y `galeria` siguen funcionando igual (no se modifican sus scripts).
+
+## Fuera de alcance
+Modificar los scripts de HB para usar la versión genérica, cambiar componentes de la web, procesado de audio, generación de imágenes con IA, publicar la skill fuera de `~/.claude`.

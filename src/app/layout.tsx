@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { MobileContactBar } from "@/components/ui/MobileContactBar";
 import { LocalBusinessJsonLd } from "@/components/seo/LocalBusinessJsonLd";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         <WhatsAppFab />
         <MobileContactBar />
+        <Analytics />
       </body>
     </html>
   );

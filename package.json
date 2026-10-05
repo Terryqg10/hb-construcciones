@@ -12,6 +12,7 @@
     "galeria": "node scripts/process-gallery.mts"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^13.4.1",
     "lucide-react": "^1.47.0",
     "next": "16.3.8",

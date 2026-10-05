@@ -53,7 +53,7 @@ export function GalleryGrid({ photos }: GalleryGridProps) {
             >
               <Image
                 src={photo.src}
-                alt=""
+                alt={photo.alt}
                 width={photo.width}
                 height={photo.height}
                 sizes="(min-width: 1152px) 376px, (min-width: 640px) 33vw, 50vw"

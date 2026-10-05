@@ -28,10 +28,10 @@ export function Footer() {
       <p className="mt-3 flex items-center justify-center gap-2 text-xs text-slate-400">
         Desarrollado por
         <Image
-          src="/brand/terry-logo.png"
+          src="/brand/tq-logo.png"
           alt="Terry — Web Developer"
-          width={537}
-          height={319}
+          width={428}
+          height={309}
           className="h-9 w-auto opacity-80 transition-opacity hover:opacity-100"
         />
       </p>
